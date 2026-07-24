@@ -1,0 +1,250 @@
+{
+  "users": [
+    {
+      "id": "user-admin",
+      "name": "System Admin",
+      "email": "admin@citycare.com",
+      "passwordHash": "$2b$10$3jiNDcTmoH2FgdqLaagkYeO6d5jBfPpN2l3lJ6xnU.z6qlo2y3rGa",
+      "role": "admin",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "user-doctor",
+      "name": "Dr. Amina Khan",
+      "email": "dr.khan@citycare.com",
+      "passwordHash": "$2b$10$N97YzyR13YQ2QxmO9ch8WuyxFZb8VGBqA0sYTw7KAGNFEzD7yGQ7.",
+      "role": "doctor",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "user-patient",
+      "name": "Sara Ahmed",
+      "email": "patient@citycare.com",
+      "passwordHash": "$2b$10$KsJNJq7RjG7b2A0sRmfn8O7DmFqgkS9F7f1f7z6q7rWhKmg8pU9Gy",
+      "role": "patient",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "user-1784890245227",
+      "name": "Demo User",
+      "email": "demo@citycare.com",
+      "passwordHash": "$2b$10$YE/OKxh/A3ETkGFRwW8cme8Jdq9UUmnXBfGTiEaT9A2t3LwKgIz.G",
+      "role": "patient",
+      "createdAt": "2026-07-24T10:50:45.227Z"
+    },
+    {
+      "id": "user-1784890566887",
+      "name": "vincent",
+      "email": "1dmin@citycare.com",
+      "passwordHash": "$2b$10$ToKaKZ5TObh02iCIf9.dvOH7N9Q27TeG7OkLYEPHVWqXpeZVfi9ni",
+      "role": "doctor",
+      "createdAt": "2026-07-24T10:56:06.887Z"
+    },
+    {
+      "id": "user-1784891458115",
+      "name": "hosea",
+      "email": "amin@citycare.com",
+      "passwordHash": "$2b$10$IE52weVGXQt1so29JTfq/ORt9r1mw2JLCWUkb3hdSsYxJ9HoAa/4.",
+      "role": "admin",
+      "createdAt": "2026-07-24T11:10:58.115Z"
+    },
+    {
+      "id": "user-1784893613135",
+      "name": "shedo",
+      "email": "pat@citycare.com",
+      "passwordHash": "$2b$10$Gp5j/qoCcyh6EC6DfPXRH.nB7rbH53XHiphlIEkVhk8NsJh4ntzxC",
+      "role": "patient",
+      "createdAt": "2026-07-24T11:46:53.135Z"
+    },
+    {
+      "id": "user-1784903295182",
+      "name": "suraj",
+      "email": "hat@citycare.com",
+      "passwordHash": "$2b$10$KTSa5/ja6BVWoimBSx33Pe/29sKANc0QVv9PvvTWM6aFSMkhDr7zq",
+      "role": "patient",
+      "createdAt": "2026-07-24T14:28:15.183Z"
+    },
+    {
+      "id": "user-1784904034046",
+      "name": "usman",
+      "email": "usman@citycare.com",
+      "passwordHash": "$2b$10$5L.k5ClcHPDXWXrwyQliMOM9hS2Xo1pv3cKh/3d64pfZthzgebRZ2",
+      "role": "patient",
+      "createdAt": "2026-07-24T14:40:34.487Z"
+    },
+    {
+      "id": "user-1784904087885",
+      "name": "Virobotics Aminu musa",
+      "email": "usan@citycare.com",
+      "passwordHash": "$2b$10$Uh2DQViKy8CejkUJcFHknuZW7kbAr5xrezxhoeSmLFaGnQ1ikRihC",
+      "role": "doctor",
+      "createdAt": "2026-07-24T14:41:28.011Z"
+    }
+  ],
+  "patients": [
+    {
+      "id": "patient-1",
+      "userId": "user-patient",
+      "dateOfBirth": "1991-04-18",
+      "phone": "+966500222222",
+      "address": "Riyadh, Saudi Arabia",
+      "bloodGroup": "O+",
+      "emergencyContact": "Hassan Ahmed",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "patient-1784890245227",
+      "userId": "user-1784890245227",
+      "dateOfBirth": "",
+      "phone": "",
+      "address": "",
+      "bloodGroup": "",
+      "emergencyContact": "",
+      "createdAt": "2026-07-24T10:50:45.227Z"
+    },
+    {
+      "id": "patient-1784893613135",
+      "userId": "user-1784893613135",
+      "dateOfBirth": "",
+      "phone": "",
+      "address": "",
+      "bloodGroup": "",
+      "emergencyContact": "",
+      "createdAt": "2026-07-24T11:46:53.135Z"
+    },
+    {
+      "id": "patient-1784903295500",
+      "userId": "user-1784903295182",
+      "dateOfBirth": "",
+      "phone": "",
+      "address": "",
+      "bloodGroup": "",
+      "emergencyContact": "",
+      "createdAt": "2026-07-24T14:28:15.183Z"
+    },
+    {
+      "id": "patient-1784904034487",
+      "userId": "user-1784904034046",
+      "dateOfBirth": "2026-07-27",
+      "phone": "0908977555",
+      "address": "janruwa kaduna",
+      "bloodGroup": "0+",
+      "emergencyContact": "",
+      "createdAt": "2026-07-24T14:40:34.487Z"
+    }
+  ],
+  "doctors": [
+    {
+      "id": "doctor-1",
+      "userId": "user-doctor",
+      "specialization": "Cardiology",
+      "phone": "+966500111111",
+      "availability": "Mon-Fri 09:00-17:00",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "doctor-1784890566887",
+      "userId": "user-1784890566887",
+      "specialization": "",
+      "phone": "",
+      "availability": "",
+      "createdAt": "2026-07-24T10:56:06.887Z"
+    },
+    {
+      "id": "doctor-1784904088011",
+      "userId": "user-1784904087885",
+      "specialization": "sugeon ",
+      "phone": "08085558908",
+      "availability": " available",
+      "createdAt": "2026-07-24T14:41:28.011Z"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "appointment-1",
+      "patientId": "patient-1",
+      "doctorId": "doctor-1",
+      "date": "2026-07-30",
+      "time": "10:30",
+      "status": "Scheduled",
+      "notes": "Routine checkup",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "appointment-1784895916919",
+      "patientId": "vince",
+      "doctorId": "22222",
+      "date": "2/11/2026",
+      "time": "2:40",
+      "status": "Scheduled",
+      "notes": "fbbisbhihukr",
+      "createdAt": "2026-07-24T12:25:16.919Z"
+    },
+    {
+      "id": "appointment-1784903949538",
+      "patientId": "patient-1",
+      "doctorId": "doctor-1",
+      "date": "2026-07-28",
+      "time": "10:05",
+      "status": "Scheduled",
+      "notes": "pains in chest",
+      "createdAt": "2026-07-24T14:39:09.539Z"
+    }
+  ],
+  "records": [
+    {
+      "id": "record-1",
+      "patientId": "patient-1",
+      "doctorId": "doctor-1",
+      "diagnosis": "Hypertension",
+      "treatment": "Lifestyle changes and medication review",
+      "prescription": "Amlodipine 5mg",
+      "notes": "Monitor blood pressure weekly",
+      "createdAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "record-1784902902785",
+      "patientId": "patient-1",
+      "doctorId": "doctor-1784890566887",
+      "diagnosis": "ulcer",
+      "treatment": "pills",
+      "prescription": "take 2 everyday",
+      "notes": "",
+      "createdAt": "2026-07-24T14:21:42.831Z"
+    }
+  ],
+  "bills": [
+    {
+      "id": "bill-1",
+      "patientId": "patient-1",
+      "amount": 320,
+      "service": "Consultation & Lab",
+      "status": "Pending",
+      "issuedAt": "2026-07-24T10:50:44.588Z"
+    },
+    {
+      "id": "bill-1784903867502",
+      "patientId": "patient-1",
+      "amount": 320,
+      "service": "the",
+      "status": "Paid",
+      "issuedAt": "2026-07-24T14:37:47.502Z"
+    },
+    {
+      "id": "bill-1784903910358",
+      "patientId": "patient-1784893613135",
+      "amount": 4000,
+      "service": "Test",
+      "status": "Pending",
+      "issuedAt": "2026-07-24T14:38:30.358Z"
+    },
+    {
+      "id": "bill-1784904128298",
+      "patientId": "patient-1",
+      "amount": 4003,
+      "service": "paid",
+      "status": "Paid",
+      "issuedAt": "2026-07-24T14:42:08.298Z"
+    }
+  ]
+}
