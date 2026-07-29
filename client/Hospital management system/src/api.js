@@ -4,7 +4,7 @@
 // ==============================================================
 
 const STORAGE_KEY = 'hms_data';
-const TOKEN_KEY = 'hms_token';
+export const TOKEN_KEY = 'hms_token';
 
 // ─── helpers ──────────────────────────────────────────────────────
 

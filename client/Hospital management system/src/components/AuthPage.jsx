@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loginUser, registerUser } from '../api';
+import { loginUser, registerUser, TOKEN_KEY } from '../api';
 
 export default function AuthPage({ onAuth }) {
   const [authMode, setAuthMode] = useState('login');
@@ -17,7 +17,7 @@ export default function AuthPage({ onAuth }) {
       const result = authMode === 'login'
         ? await loginUser(form.email, form.password)
         : await registerUser({ name: form.name, email: form.email, password: form.password, role: form.role });
-      localStorage.setItem('token', result.token);
+      localStorage.setItem(TOKEN_KEY, result.token);
       await onAuth();
     } catch (err) {
       setError(err.message);

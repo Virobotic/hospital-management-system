@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { getMe, getDashboard, getPatients, getDoctors, getAppointments, getRecords, getBills } from './api';
+import { getMe, getDashboard, getPatients, getDoctors, getAppointments, getRecords, getBills, TOKEN_KEY } from './api';
 import Sidebar from './components/Sidebar';
 import AuthPage from './components/AuthPage';
 import DashboardPage from './components/DashboardPage';
@@ -21,6 +21,8 @@ function App() {
   const [records, setRecords] = useState([]);
   const [bills, setBills] = useState([]);
   const [error, setError] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 768);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
 
   const loadData = async () => {
     try {
@@ -50,19 +52,42 @@ function App() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
       loadData();
     }
   }, []);
 
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const updateViewport = () => {
+      const mobile = mediaQuery.matches;
+      setIsMobile(mobile);
+      setSidebarOpen(!mobile);
+    };
+
+    updateViewport();
+    mediaQuery.addEventListener('change', updateViewport);
+
+    return () => mediaQuery.removeEventListener('change', updateViewport);
+  }, []);
+
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem(TOKEN_KEY);
     setUser(null);
     setActivePage('dashboard');
   };
 
   const clearError = () => setError('');
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+  const closeSidebar = () => setSidebarOpen(false);
+
+  const handleNavigate = (page) => {
+    setActivePage(page);
+    if (isMobile) {
+      closeSidebar();
+    }
+  };
 
   const pageProps = {
     user,
@@ -105,7 +130,19 @@ function App() {
 
   return (
     <div className="app-layout">
-      <Sidebar activePage={activePage} onNavigate={setActivePage} user={user} onLogout={handleLogout} />
+      {isMobile && (
+        <>
+          <button className="mobile-nav-toggle" onClick={toggleSidebar} aria-label="Open navigation">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+          <div className={`sidebar-backdrop ${sidebarOpen ? 'show' : ''}`} onClick={closeSidebar} />
+        </>
+      )}
+      <Sidebar activePage={activePage} onNavigate={handleNavigate} user={user} onLogout={handleLogout} isOpen={sidebarOpen} onClose={closeSidebar} />
       <main className="main-content">
         {renderPage()}
         {error && (
