@@ -21,7 +21,7 @@ function App() {
   const [records, setRecords] = useState([]);
   const [bills, setBills] = useState([]);
   const [error, setError] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth > 768);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
 
   const loadData = async () => {
@@ -63,7 +63,9 @@ function App() {
     const updateViewport = () => {
       const mobile = mediaQuery.matches;
       setIsMobile(mobile);
-      setSidebarOpen(!mobile);
+      if (!mobile) {
+        setSidebarOpen(true);
+      }
     };
 
     updateViewport();
@@ -79,8 +81,16 @@ function App() {
   };
 
   const clearError = () => setError('');
-  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
-  const closeSidebar = () => setSidebarOpen(false);
+  const toggleSidebar = () => {
+    if (isMobile) {
+      setSidebarOpen((prev) => !prev);
+    }
+  };
+  const closeSidebar = () => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
 
   const handleNavigate = (page) => {
     setActivePage(page);
@@ -132,7 +142,7 @@ function App() {
     <div className="app-layout">
       {isMobile && (
         <>
-          <button className="mobile-nav-toggle" onClick={toggleSidebar} aria-label="Open navigation">
+          <button className="mobile-nav-toggle" onClick={toggleSidebar} aria-label="Toggle navigation">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="3" y1="6" x2="21" y2="6"/>
               <line x1="3" y1="12" x2="21" y2="12"/>
@@ -142,7 +152,7 @@ function App() {
           <div className={`sidebar-backdrop ${sidebarOpen ? 'show' : ''}`} onClick={closeSidebar} />
         </>
       )}
-      <Sidebar activePage={activePage} onNavigate={handleNavigate} user={user} onLogout={handleLogout} isOpen={sidebarOpen} onClose={closeSidebar} />
+      <Sidebar activePage={activePage} onNavigate={handleNavigate} user={user} onLogout={handleLogout} isOpen={isMobile ? sidebarOpen : true} onClose={closeSidebar} />
       <main className="main-content">
         {renderPage()}
         {error && (
