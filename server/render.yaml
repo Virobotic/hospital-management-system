@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hms-server
+    env: node
+    buildCommand: npm install
+    startCommand: node app.js
+    envVars:
+      - key: JWT_SECRET
+        value: hospital_secret_key_2026
+      - key: NODE_VERSION
+        value: 18
