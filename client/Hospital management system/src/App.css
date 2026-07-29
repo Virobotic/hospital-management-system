@@ -45,10 +45,31 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
 /* ---------- Layout ---------- */
 .app-layout {
   display: flex;
   min-height: 100vh;
+  animation: fadeInUp 0.35s ease-out;
 }
 
 .main-content {
@@ -59,6 +80,7 @@ body {
   padding: 1.75rem 2.25rem 2.5rem;
   max-width: calc(100vw - var(--sidebar-width));
   overflow-x: hidden;
+  animation: fadeInUp 0.45s ease-out;
 }
 
 /* ---------- Sidebar ---------- */
@@ -75,10 +97,20 @@ body {
   height: 100vh;
   overflow-y: auto;
   z-index: 20;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .mobile-nav-toggle {
   display: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-nav-toggle:hover {
+  transform: translateY(-1px);
+}
+
+.mobile-nav-toggle:active {
+  animation: softPulse 0.2s ease;
 }
 
 .sidebar-backdrop {
@@ -152,9 +184,14 @@ body {
   font-weight: 500;
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   text-align: left;
   font-family: var(--font-family);
+}
+
+.nav-item:hover,
+.nav-item:focus-visible {
+  transform: translateX(2px);
 }
 
 .nav-item:hover {
@@ -184,6 +221,7 @@ body {
 
 .logout-btn {
   color: rgba(248, 113, 113, 0.7);
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .logout-btn:hover {
