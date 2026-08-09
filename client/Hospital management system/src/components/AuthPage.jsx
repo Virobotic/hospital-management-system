@@ -32,10 +32,6 @@ export default function AuthPage({ onAuth }) {
           <p>Hospital Management System</p>
         </div>
 
-        <div className="auth-toggle">
-          <button type="button" className="toggle-active">Login</button>
-        </div>
-
         <form onSubmit={handleSubmit} className="form-stack">
           <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email address" required />
           <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password" required />
