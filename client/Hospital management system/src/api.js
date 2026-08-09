@@ -35,7 +35,7 @@ function seedState() {
   const now = new Date().toISOString();
   const state = {
     users: [
-      { id: 'user-admin',    name: 'System Admin',    email: 'admin@citycare.com',   password: encodePw('admin123'),   role: 'admin',  createdAt: now },
+      { id: 'user-admin',    name: 'Administrator',   email: 'admin@citycare.com',   password: encodePw('admin123'),   role: 'admin',  createdAt: now },
       { id: 'user-doctor',   name: 'Dr. Amina Khan',  email: 'dr.khan@citycare.com',  password: encodePw('doctor123'),  role: 'doctor', createdAt: now },
       { id: 'user-patient',  name: 'Sara Ahmed',      email: 'patient@citycare.com',  password: encodePw('patient123'), role: 'patient',createdAt: now },
     ],
@@ -43,7 +43,7 @@ function seedState() {
       { id: 'patient-1', userId: 'user-patient', dateOfBirth: '1991-04-18', phone: '+966500222222', address: 'Riyadh, Saudi Arabia', bloodGroup: 'O+', emergencyContact: 'Hassan Ahmed', createdAt: now },
     ],
     doctors: [
-      { id: 'doctor-1', userId: 'user-doctor', specialization: 'Cardiology', phone: '+966500111111', availability: 'Mon-Fri 09:00-17:00', createdAt: now },
+      { id: 'doctor-1', userId: 'user-doctor', specialization: 'Cardiology', phone: '+966500111111', state: 'Lagos', localGovernment: 'Ikeja', availability: 'Mon-Fri 09:00-17:00', createdAt: now },
     ],
     appointments: [
       { id: 'appointment-1', patientId: 'patient-1', doctorId: 'doctor-1', date: '2026-07-30', time: '10:30', status: 'Scheduled', notes: 'Routine checkup', createdAt: now },
@@ -63,6 +63,18 @@ function ensureState() {
   let s = getState();
   if (!s || !s.users || s.users.length === 0) {
     s = seedState();
+  }
+  // Keep the original demo doctor complete for existing browser storage.
+  const demoDoctor = s.doctors?.find((doctor) => doctor.id === 'doctor-1');
+  if (demoDoctor && (!demoDoctor.state || !demoDoctor.localGovernment)) {
+    demoDoctor.state ||= 'Lagos';
+    demoDoctor.localGovernment ||= 'Ikeja';
+    saveState(s);
+  }
+  const adminUser = s.users?.find((user) => user.id === 'user-admin');
+  if (adminUser?.name === 'System Admin') {
+    adminUser.name = 'Administrator';
+    saveState(s);
   }
   return s;
 }
@@ -214,13 +226,13 @@ export async function createDoctor(data) {
   }
 
   const state = ensureState();
-  const { name, email, password, specialization, phone, availability } = data;
+  const { name, email, password, specialization, phone, state: doctorState, localGovernment, availability } = data;
   if (!name || !email || !password) throw new Error('Name, email and password are required');
   if (state.users.some((u) => u.email === email)) throw new Error('Email already exists');
 
   const now = new Date().toISOString();
   const user = { id: uid('user'), name, email, password: encodePw(password), role: 'doctor', createdAt: now };
-  const doctor = { id: uid('doctor'), userId: user.id, specialization: specialization || '', phone: phone || '', availability: availability || '', createdAt: now };
+  const doctor = { id: uid('doctor'), userId: user.id, specialization: specialization || '', phone: phone || '', state: doctorState || '', localGovernment: localGovernment || '', availability: availability || '', createdAt: now };
 
   state.users.push(user);
   state.doctors.push(doctor);

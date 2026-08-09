@@ -1,19 +1,35 @@
 import { useState } from 'react';
 import { createDoctor, removeDoctor } from '../api';
+import { NIGERIAN_STATES, getLocalGovernments } from '../data/nigeriaLocations';
 
 export default function DoctorsPage({ doctors, loadData, user }) {
   const [showForm, setShowForm] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [localGovernments, setLocalGovernments] = useState([]);
   const [form, setForm] = useState({
-    name: '', email: '', password: '', specialization: '', phone: '', availability: '',
+    name: '', email: '', password: '', specialization: '', phone: '', state: '', localGovernment: '', availability: '',
   });
 
-  const handleChange = (e) => { setForm((prev) => ({ ...prev, [e.target.name]: e.target.value })); };
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    if (name === 'state') {
+      setForm((prev) => ({ ...prev, state: value, localGovernment: '' }));
+      setLocalGovernments([]);
+      try {
+        setLocalGovernments(await getLocalGovernments(value));
+      } catch {
+        alert('Could not load local governments. Please check your connection and try again.');
+      }
+      return;
+    }
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createDoctor(form);
-      setForm({ name: '', email: '', password: '', specialization: '', phone: '', availability: '' });
+      setForm({ name: '', email: '', password: '', specialization: '', phone: '', state: '', localGovernment: '', availability: '' });
       setShowForm(false);
       await loadData();
     } catch (err) { alert(err.message); }
@@ -54,6 +70,14 @@ export default function DoctorsPage({ doctors, loadData, user }) {
             <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password" required />
             <input name="specialization" value={form.specialization} onChange={handleChange} placeholder="Specialization" />
             <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" />
+            <select name="state" value={form.state} onChange={handleChange} required>
+              <option value="">Select state</option>
+              {NIGERIAN_STATES.map((state) => <option key={state} value={state}>{state}</option>)}
+            </select>
+            <select name="localGovernment" value={form.localGovernment} onChange={handleChange} disabled={!form.state || localGovernments.length === 0} required>
+              <option value="">{form.state ? 'Select local government' : 'Select a state first'}</option>
+              {localGovernments.map((localGovernment) => <option key={localGovernment} value={localGovernment}>{localGovernment}</option>)}
+            </select>
             <input name="availability" value={form.availability} onChange={handleChange} placeholder="Availability" />
             <button type="submit" className="primary-btn" style={{ gridColumn: '1 / -1' }}>Register</button>
           </form>
@@ -82,6 +106,9 @@ export default function DoctorsPage({ doctors, loadData, user }) {
               {d.availability && (
                 <div className="doctor-availability">{d.availability}</div>
               )}
+              <button className="secondary-btn doctor-details-btn" onClick={() => setSelectedDoctor(d)}>
+                View details
+              </button>
               {user?.role === 'admin' && (
                 <button className="error-dismiss" style={{ marginTop: '0.75rem' }} onClick={() => handleRemoveDoctor(d.id)}>
                   Remove doctor
@@ -91,6 +118,29 @@ export default function DoctorsPage({ doctors, loadData, user }) {
           </article>
         ))}
       </div>
+
+      {selectedDoctor && (
+        <div className="doctor-modal-backdrop" onClick={() => setSelectedDoctor(null)} role="presentation">
+          <section className="doctor-modal" role="dialog" aria-modal="true" aria-labelledby="doctor-details-title" onClick={(event) => event.stopPropagation()}>
+            <div className="doctor-modal-header">
+              <div>
+                <p className="doctor-modal-label">Doctor profile</p>
+                <h3 id="doctor-details-title">{selectedDoctor.user?.name || 'Doctor details'}</h3>
+              </div>
+              <button className="doctor-modal-close" onClick={() => setSelectedDoctor(null)} aria-label="Close doctor details">&times;</button>
+            </div>
+            <div className="doctor-details-grid">
+              <div><span>Name</span><strong>{selectedDoctor.user?.name || '—'}</strong></div>
+              <div><span>State</span><strong>{selectedDoctor.state || 'Not provided'}</strong></div>
+              <div><span>Local government</span><strong>{selectedDoctor.localGovernment || 'Not provided'}</strong></div>
+              <div><span>Specialty</span><strong>{selectedDoctor.specialization || 'General Practitioner'}</strong></div>
+              <div><span>Phone</span><strong>{selectedDoctor.phone || 'Not provided'}</strong></div>
+              <div><span>Email</span><strong>{selectedDoctor.user?.email || 'Not provided'}</strong></div>
+              <div><span>Availability</span><strong>{selectedDoctor.availability || 'Not provided'}</strong></div>
+            </div>
+          </section>
+        </div>
+      )}
     </>
   );
 }

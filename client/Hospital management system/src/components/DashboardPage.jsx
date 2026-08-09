@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { createAppointment, createBill, createPatient, createDoctor } from '../api';
+import { NIGERIAN_STATES, getLocalGovernments } from '../data/nigeriaLocations';
 
 function StatCard({ label, value, trend, icon }) {
   return (
@@ -12,16 +13,28 @@ function StatCard({ label, value, trend, icon }) {
 }
 
 export default function DashboardPage({ user, dashboard, patients, doctors, appointments, bills, loadData }) {
+  const [localGovernments, setLocalGovernments] = useState([]);
   const [form, setForm] = useState({
     name: '', email: '', password: '', role: 'patient',
     phone: '', dateOfBirth: '', address: '', bloodGroup: '', emergencyContact: '',
-    specialization: '', availability: '',
+    specialization: '', state: '', localGovernment: '', availability: '',
     patientId: '', doctorId: '', date: '', time: '', notes: '',
     amount: '', service: '', status: 'Pending',
   });
 
-  const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    if (name === 'state') {
+      setForm((prev) => ({ ...prev, state: value, localGovernment: '' }));
+      setLocalGovernments([]);
+      try {
+        setLocalGovernments(await getLocalGovernments(value));
+      } catch {
+        alert('Could not load local governments. Please check your connection and try again.');
+      }
+      return;
+    }
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCreatePatient = async (e) => {
@@ -42,9 +55,9 @@ export default function DashboardPage({ user, dashboard, patients, doctors, appo
     try {
       await createDoctor({
         name: form.name, email: form.email, password: form.password,
-        specialization: form.specialization, phone: form.phone, availability: form.availability,
+        specialization: form.specialization, phone: form.phone, state: form.state, localGovernment: form.localGovernment, availability: form.availability,
       });
-      setForm((prev) => ({ ...prev, name: '', email: '', password: '', phone: '', specialization: '', availability: '' }));
+      setForm((prev) => ({ ...prev, name: '', email: '', password: '', phone: '', specialization: '', state: '', localGovernment: '', availability: '' }));
       await loadData();
     } catch (err) { alert(err.message); }
   };
@@ -128,6 +141,14 @@ export default function DashboardPage({ user, dashboard, patients, doctors, appo
                 <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password" required />
                 <input name="specialization" value={form.specialization} onChange={handleChange} placeholder="Specialization" />
                 <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" />
+                <select name="state" value={form.state} onChange={handleChange} required>
+                  <option value="">Select state</option>
+                  {NIGERIAN_STATES.map((state) => <option key={state} value={state}>{state}</option>)}
+                </select>
+                <select name="localGovernment" value={form.localGovernment} onChange={handleChange} disabled={!form.state || localGovernments.length === 0} required>
+                  <option value="">{form.state ? 'Select local government' : 'Select a state first'}</option>
+                  {localGovernments.map((localGovernment) => <option key={localGovernment} value={localGovernment}>{localGovernment}</option>)}
+                </select>
                 <input name="availability" value={form.availability} onChange={handleChange} placeholder="Availability (e.g. Mon-Fri 9-5)" />
                 <button type="submit" className="primary-btn">Add doctor</button>
               </form>
