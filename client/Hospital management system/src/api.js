@@ -150,23 +150,7 @@ export async function loginUser(email, password) {
 }
 
 export async function registerUser({ name, email, password, role = 'patient' }) {
-  const state = ensureState();
-  if (state.users.some((u) => u.email === email)) {
-    throw new Error('Email already exists');
-  }
-  const now = new Date().toISOString();
-  const user = { id: uid('user'), name, email, password: encodePw(password), role, createdAt: now };
-  state.users.push(user);
-
-  if (role === 'patient') {
-    state.patients.push({ id: uid('patient'), userId: user.id, dateOfBirth: '', phone: '', address: '', bloodGroup: '', emergencyContact: '', createdAt: now });
-  } else if (role === 'doctor') {
-    state.doctors.push({ id: uid('doctor'), userId: user.id, specialization: '', phone: '', availability: '', createdAt: now });
-  }
-
-  saveState(state);
-  const token = createToken(user);
-  return { token, user: { id: user.id, name: user.name, email: user.email, role: user.role } };
+  throw new Error('Registration is disabled. Only admins can add doctors.');
 }
 
 export async function getMe() {
@@ -224,6 +208,11 @@ export async function getDoctors() {
 }
 
 export async function createDoctor(data) {
+  const currentUser = getUserFromToken();
+  if (!currentUser || currentUser.role !== 'admin') {
+    throw new Error('Only admins can add doctors');
+  }
+
   const state = ensureState();
   const { name, email, password, specialization, phone, availability } = data;
   if (!name || !email || !password) throw new Error('Name, email and password are required');
@@ -237,6 +226,25 @@ export async function createDoctor(data) {
   state.doctors.push(doctor);
   saveState(state);
   return { doctor, user: { id: user.id, name: user.name, email: user.email, role: user.role } };
+}
+
+export async function removeDoctor(doctorId) {
+  const currentUser = getUserFromToken();
+  if (!currentUser || currentUser.role !== 'admin') {
+    throw new Error('Only admins can remove doctors');
+  }
+
+  const state = ensureState();
+  const doctorIndex = state.doctors.findIndex((doctor) => doctor.id === doctorId);
+  if (doctorIndex === -1) throw new Error('Doctor not found');
+
+  const doctor = state.doctors[doctorIndex];
+  state.doctors.splice(doctorIndex, 1);
+  state.users = state.users.filter((user) => user.id !== doctor.userId);
+  state.appointments = state.appointments.filter((appointment) => appointment.doctorId !== doctorId);
+  state.records = state.records.filter((record) => record.doctorId !== doctorId);
+  saveState(state);
+  return doctor;
 }
 
 export async function getAppointments() {

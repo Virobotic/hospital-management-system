@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { loginUser, registerUser, TOKEN_KEY } from '../api';
+import { loginUser, TOKEN_KEY } from '../api';
 
 export default function AuthPage({ onAuth }) {
-  const [authMode, setAuthMode] = useState('login');
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'patient' });
+  const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
   const handleChange = (e) => {
@@ -14,9 +13,7 @@ export default function AuthPage({ onAuth }) {
     e.preventDefault();
     setError('');
     try {
-      const result = authMode === 'login'
-        ? await loginUser(form.email, form.password)
-        : await registerUser({ name: form.name, email: form.email, password: form.password, role: form.role });
+      const result = await loginUser(form.email, form.password);
       localStorage.setItem(TOKEN_KEY, result.token);
       await onAuth();
     } catch (err) {
@@ -36,29 +33,16 @@ export default function AuthPage({ onAuth }) {
         </div>
 
         <div className="auth-toggle">
-          <button type="button" className={authMode === 'login' ? 'toggle-active' : 'toggle-inactive'} onClick={() => setAuthMode('login')}>
-            Login
-          </button>
-          <button type="button" className={authMode === 'register' ? 'toggle-active' : 'toggle-inactive'} onClick={() => setAuthMode('register')}>
-            Register
-          </button>
+          <button type="button" className="toggle-active">Login</button>
         </div>
 
         <form onSubmit={handleSubmit} className="form-stack">
-          {authMode === 'register' && (
-            <>
-              <select name="role" value={form.role} onChange={handleChange}>
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-                <option value="admin">Admin</option>
-              </select>
-              <input name="name" value={form.name} onChange={handleChange} placeholder="Full name" required />
-            </>
-          )}
           <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email address" required />
           <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password" required />
-          <button type="submit" className="primary-btn">{authMode === 'login' ? 'Sign in' : 'Create account'}</button>
+          <button type="submit" className="primary-btn">Sign in</button>
         </form>
+
+        <p className="empty-state" style={{ marginTop: '1rem' }}>Only admins can add or remove doctors.</p>
 
         {error && <p className="error-message">{error}</p>}
       </div>

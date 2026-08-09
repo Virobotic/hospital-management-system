@@ -88,7 +88,9 @@ export default function DashboardPage({ user, dashboard, patients, doctors, appo
     <>
       <div className="page-header">
         <h2>Dashboard</h2>
-        <p>Welcome back, <strong>{user?.name}</strong>. Here's what's happening today.</p>
+        <div style={{ marginTop: '6px' }}>
+          <strong style={{ display: 'block', fontSize: '1.05rem' }}>{user?.name}</strong>
+        </div>
         <p className="page-header-user">{user?.role === 'admin' ? 'Administrator' : user?.role === 'doctor' ? 'Doctor' : 'Patient'} account</p>
       </div>
 

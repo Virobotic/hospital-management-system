@@ -1090,79 +1090,171 @@ body {
 
 @media (max-width: 768px) {
   .app-layout {
-    flex-direction: row;
+    display: block;
+    padding-top: 4.25rem;
   }
 
-  .mobile-nav-toggle,
-  .sidebar-backdrop,
-  .sidebar-close {
-    display: none;
+  .mobile-topbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 4.25rem;
+    padding: 0.65rem 1rem;
+    background: rgba(255, 255, 255, 0.96);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 1px 10px rgba(15, 23, 42, 0.04);
+    backdrop-filter: blur(12px);
+  }
+
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--color-primary);
+  }
+
+  .mobile-brand svg {
+    color: var(--color-accent);
+  }
+
+  .mobile-brand div {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .mobile-brand strong {
+    font-size: 0.9rem;
+  }
+
+  .mobile-brand span {
+    color: var(--color-text-secondary);
+    font-size: 0.72rem;
+  }
+
+  .mobile-nav-toggle {
+    display: inline-flex;
+    position: static;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-sm);
+    box-shadow: none;
   }
 
   .sidebar {
-    width: 72px;
-    min-width: 72px;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    padding: 1rem 0.5rem;
-    gap: 1rem;
-    transform: none;
-    box-shadow: none;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    width: min(86vw, 320px);
+    min-width: 0;
+    padding: 1.25rem 0;
   }
 
   .sidebar-header {
-    padding: 0;
-    border: none;
-    gap: 0.5rem;
-    justify-content: center;
-  }
-
-  .sidebar-header h2 {
-    display: none;
-  }
-
-  .sidebar-user {
-    display: none;
+    padding: 0 1.1rem 1.1rem;
   }
 
   .sidebar-nav {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    padding: 0.5rem 0;
-    gap: 0.4rem;
-    width: 100%;
-    order: 0;
-    border-top: none;
-    margin-top: 0;
-    padding-top: 0;
+    padding: 0.75rem;
+    gap: 0.3rem;
   }
 
-  .sidebar-nav .nav-item {
-    justify-content: center;
-    padding: 0.9rem 0;
-    width: 100%;
-  }
-
-  .nav-item span {
-    display: none;
-  }
-
-  .nav-item svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .sidebar-footer {
-    display: none;
+  .nav-item {
+    padding: 0.8rem 0.85rem;
+    font-size: 0.9rem;
+    border-radius: var(--radius-md);
   }
 
   .main-content {
-    max-width: calc(100vw - 72px);
+    max-width: 100%;
+    padding: 0.5rem 1rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .page-header {
+    padding: 0.75rem 0 0;
+  }
+
+  .page-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .panel,
+  .stat-card,
+  .analytics-card {
     padding: 1rem;
+  }
+
+  .stat-card {
+    min-height: 7.25rem;
+  }
+
+  .panel-header {
+    margin-bottom: 0.8rem;
+  }
+
+  .section-toolbar {
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .section-toolbar .primary-btn,
+  .section-toolbar .secondary-btn {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .form-stack input,
+  .form-stack select,
+  .form-stack textarea {
+    min-height: 2.8rem;
+    font-size: 1rem;
+  }
+
+  .form-stack textarea {
+    min-height: 5.5rem;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    min-height: 2.75rem;
+  }
+
+  .list li,
+  .revenue-item {
+    align-items: flex-start;
+    padding: 0.8rem 0;
+  }
+
+  .list li > div,
+  .revenue-item > div:first-child {
+    min-width: 0;
+  }
+
+  .list-item-sub,
+  .revenue-sub,
+  .doctor-email {
+    overflow-wrap: anywhere;
+  }
+
+  .table-wrapper {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    border-radius: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .data-table {
+    min-width: 620px;
+  }
+
+  .tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    flex: 0 0 auto;
+    padding: 0.65rem 0.85rem;
   }
 
   .stats-grid,
@@ -1177,5 +1269,29 @@ body {
 
   .doctor-cards {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .main-content {
+    padding-inline: 0.75rem;
+  }
+
+  .stats-grid {
+    gap: 0.75rem;
+  }
+
+  .panel,
+  .stat-card,
+  .analytics-card {
+    padding: 0.9rem;
+  }
+
+  .donut-chart {
+    gap: 0.85rem;
+  }
+
+  .doctor-card {
+    padding: 1rem;
   }
 }

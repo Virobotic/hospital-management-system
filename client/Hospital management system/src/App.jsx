@@ -91,6 +91,16 @@ function App() {
     }
   };
 
+  const pageTitles = {
+    dashboard: 'Dashboard',
+    consultation: 'Consultation',
+    analytics: 'Analytics',
+    patients: 'Patients',
+    doctors: 'Doctors',
+    records: 'Medical records',
+    billing: 'Billing',
+  };
+
   const pageProps = {
     user,
     dashboard,
@@ -134,13 +144,24 @@ function App() {
     <div className="app-layout">
       {isMobile && (
         <>
-          <button className="mobile-nav-toggle" onClick={toggleSidebar} aria-label="Toggle navigation">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
+          <header className="mobile-topbar">
+            <div className="mobile-brand">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+              <div>
+                <strong>CityCare</strong>
+                <span>{pageTitles[activePage]}</span>
+              </div>
+            </div>
+            <button className="mobile-nav-toggle" onClick={toggleSidebar} aria-label="Open navigation" aria-expanded={sidebarOpen}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+            </button>
+          </header>
           <div className={`sidebar-backdrop ${sidebarOpen ? 'show' : ''}`} onClick={closeSidebar} />
         </>
       )}

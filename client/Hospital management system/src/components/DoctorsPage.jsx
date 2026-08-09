@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createDoctor } from '../api';
+import { createDoctor, removeDoctor } from '../api';
 
 export default function DoctorsPage({ doctors, loadData, user }) {
   const [showForm, setShowForm] = useState(false);
@@ -15,6 +15,14 @@ export default function DoctorsPage({ doctors, loadData, user }) {
       await createDoctor(form);
       setForm({ name: '', email: '', password: '', specialization: '', phone: '', availability: '' });
       setShowForm(false);
+      await loadData();
+    } catch (err) { alert(err.message); }
+  };
+
+  const handleRemoveDoctor = async (doctorId) => {
+    if (!window.confirm('Remove this doctor from the system?')) return;
+    try {
+      await removeDoctor(doctorId);
       await loadData();
     } catch (err) { alert(err.message); }
   };
@@ -73,6 +81,11 @@ export default function DoctorsPage({ doctors, loadData, user }) {
               </div>
               {d.availability && (
                 <div className="doctor-availability">{d.availability}</div>
+              )}
+              {user?.role === 'admin' && (
+                <button className="error-dismiss" style={{ marginTop: '0.75rem' }} onClick={() => handleRemoveDoctor(d.id)}>
+                  Remove doctor
+                </button>
               )}
             </div>
           </article>
