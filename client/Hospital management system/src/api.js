@@ -4,6 +4,7 @@
 // ==============================================================
 
 const STORAGE_KEY = 'hms_data';
+const DEMO_DOCTOR_PASSWORD_MIGRATION_KEY = 'hms_demo_doctor_password_v1';
 export const TOKEN_KEY = 'hms_token';
 
 // ─── helpers ──────────────────────────────────────────────────────
@@ -63,6 +64,15 @@ function ensureState() {
   let s = getState();
   if (!s || !s.users || s.users.length === 0) {
     s = seedState();
+  }
+  // Reset the built-in doctor once for browsers with older persisted demo data.
+  if (!localStorage.getItem(DEMO_DOCTOR_PASSWORD_MIGRATION_KEY)) {
+    const demoDoctorUser = s.users.find((user) => user.id === 'user-doctor' && user.email === 'dr.khan@citycare.com' && user.role === 'doctor');
+    if (demoDoctorUser) {
+      demoDoctorUser.password = encodePw('doctor123');
+      saveState(s);
+    }
+    localStorage.setItem(DEMO_DOCTOR_PASSWORD_MIGRATION_KEY, 'done');
   }
   // Keep the original demo doctor complete for existing browser storage.
   const demoDoctor = s.doctors?.find((doctor) => doctor.id === 'doctor-1');
@@ -217,6 +227,19 @@ export async function createPatient(data) {
 export async function getDoctors() {
   const state = ensureState();
   return state.doctors.map((d) => populateDoctor(d, state));
+}
+
+export async function updateDoctorPhoto(doctorId, photo) {
+  if (!/^data:image\/jpeg;base64,/.test(photo)) {
+    throw new Error('Please upload a valid image file.');
+  }
+
+  const state = ensureState();
+  const doctor = state.doctors.find((entry) => entry.id === doctorId);
+  if (!doctor) throw new Error('Doctor profile not found.');
+  doctor.photo = photo;
+  saveState(state);
+  return doctor;
 }
 
 export async function createDoctor(data) {

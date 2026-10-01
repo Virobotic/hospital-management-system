@@ -12,7 +12,7 @@
       "id": "user-doctor",
       "name": "Dr. Amina Khan",
       "email": "dr.khan@citycare.com",
-      "passwordHash": "$2b$10$N97YzyR13YQ2QxmO9ch8WuyxFZb8VGBqA0sYTw7KAGNFEzD7yGQ7.",
+      "passwordHash": "$2b$10$R7e9nYDtLl5WtEAZzH8SGeiT6xUN8LSv.SqUs4mbjSXsCD4TOzQdS",
       "role": "doctor",
       "createdAt": "2026-07-24T10:50:44.588Z"
     },

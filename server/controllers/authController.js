@@ -9,52 +9,7 @@ function createToken(user) {
 }
 
 function register(req, res) {
-  const { name, email, password, role = 'patient' } = req.body;
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: 'Name, email and password are required' });
-  }
-
-  const state = readState();
-  if (state.users.some((user) => user.email === email)) {
-    return res.status(409).json({ message: 'Email already exists' });
-  }
-
-  const passwordHash = bcrypt.hashSync(password, 10);
-  const user = {
-    id: `user-${Date.now()}`,
-    name,
-    email,
-    passwordHash,
-    role,
-    createdAt: new Date().toISOString(),
-  };
-
-  state.users.push(user);
-  if (role === 'patient') {
-    state.patients.push({
-      id: `patient-${Date.now()}`,
-      userId: user.id,
-      dateOfBirth: '',
-      phone: '',
-      address: '',
-      bloodGroup: '',
-      emergencyContact: '',
-      createdAt: user.createdAt,
-    });
-  }
-  if (role === 'doctor') {
-    state.doctors.push({
-      id: `doctor-${Date.now()}`,
-      userId: user.id,
-      specialization: '',
-      phone: '',
-      availability: '',
-      createdAt: user.createdAt,
-    });
-  }
-
-  writeState(state);
-  res.status(201).json({ message: 'User registered successfully', token: createToken(user), user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+  return res.status(403).json({ message: 'Registration is disabled. Only admins can add doctors.' });
 }
 
 function login(req, res) {

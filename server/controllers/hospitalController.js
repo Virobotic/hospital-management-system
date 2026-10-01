@@ -70,7 +70,7 @@ function listDoctors(req, res) {
 
 function createDoctor(req, res) {
   const state = readState();
-  const { name, email, password, specialization, phone, availability } = req.body;
+  const { name, email, password, specialization, phone, state: doctorState, localGovernment, availability } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Name, email and password are required' });
@@ -93,6 +93,8 @@ function createDoctor(req, res) {
     userId: user.id,
     specialization: specialization || '',
     phone: phone || '',
+    state: doctorState || '',
+    localGovernment: localGovernment || '',
     availability: availability || '',
     createdAt: user.createdAt,
   };
@@ -101,6 +103,25 @@ function createDoctor(req, res) {
   state.doctors.push(doctor);
   writeState(state);
   res.status(201).json({ doctor, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+}
+
+function removeDoctor(req, res) {
+  const state = readState();
+  const { id } = req.params;
+  const doctorIndex = state.doctors.findIndex((doctor) => doctor.id === id);
+
+  if (doctorIndex === -1) {
+    return res.status(404).json({ message: 'Doctor not found' });
+  }
+
+  const doctor = state.doctors[doctorIndex];
+  state.doctors.splice(doctorIndex, 1);
+  state.users = state.users.filter((user) => user.id !== doctor.userId);
+  state.appointments = state.appointments.filter((appointment) => appointment.doctorId !== id);
+  state.records = state.records.filter((record) => record.doctorId !== id);
+
+  writeState(state);
+  res.json({ message: 'Doctor removed successfully' });
 }
 
 function listAppointments(req, res) {
@@ -221,6 +242,7 @@ module.exports = {
   createPatient,
   listDoctors,
   createDoctor,
+  removeDoctor,
   listAppointments,
   createAppointment,
   listRecords,

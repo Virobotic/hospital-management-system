@@ -113,6 +113,7 @@ function App() {
     setError,
     clearError,
     loadData,
+    onLogout: handleLogout,
   };
 
   if (!user) {
@@ -141,8 +142,8 @@ function App() {
   };
 
   return (
-    <div className="app-layout">
-      {isMobile && (
+    <div className={`app-layout ${user.role === 'patient' ? 'patient-layout' : ''}`}>
+      {isMobile && user.role !== 'patient' && (
         <>
           <header className="mobile-topbar">
             <div className="mobile-brand">
@@ -165,7 +166,7 @@ function App() {
           <div className={`sidebar-backdrop ${sidebarOpen ? 'show' : ''}`} onClick={closeSidebar} />
         </>
       )}
-      <Sidebar activePage={activePage} onNavigate={handleNavigate} user={user} onLogout={handleLogout} isOpen={isMobile ? sidebarOpen : true} onClose={closeSidebar} />
+      {user.role !== 'patient' && <Sidebar activePage={activePage} onNavigate={handleNavigate} user={user} onLogout={handleLogout} isOpen={isMobile ? sidebarOpen : true} onClose={closeSidebar} />}
       <main className="main-content">
         {renderPage()}
         {error && (

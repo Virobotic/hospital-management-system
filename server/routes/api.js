@@ -6,6 +6,7 @@ const {
   createPatient,
   listDoctors,
   createDoctor,
+  removeDoctor,
   listAppointments,
   createAppointment,
   listRecords,
@@ -26,6 +27,7 @@ router.get('/patients', authenticateToken, requireRole('admin', 'doctor'), listP
 router.post('/patients', authenticateToken, requireRole('admin'), createPatient);
 router.get('/doctors', authenticateToken, listDoctors);
 router.post('/doctors', authenticateToken, requireRole('admin'), createDoctor);
+router.delete('/doctors/:id', authenticateToken, requireRole('admin'), removeDoctor);
 router.get('/appointments', authenticateToken, listAppointments);
 router.post('/appointments', authenticateToken, requireRole('admin', 'doctor', 'patient'), createAppointment);
 router.get('/records', authenticateToken, requireRole('admin', 'doctor'), listRecords);

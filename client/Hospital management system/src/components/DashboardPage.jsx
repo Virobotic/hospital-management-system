@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import { createAppointment, createBill, createPatient, createDoctor } from '../api';
 import { NIGERIAN_STATES, getLocalGovernments } from '../data/nigeriaLocations';
+import PatientBookingPage from './PatientBookingPage';
+import DoctorDashboardPage from './DoctorDashboardPage';
 
 function StatCard({ label, value, trend, icon }) {
   return (
@@ -12,7 +14,7 @@ function StatCard({ label, value, trend, icon }) {
   );
 }
 
-export default function DashboardPage({ user, dashboard, patients, doctors, appointments, bills, loadData }) {
+export default function DashboardPage({ user, dashboard, patients, doctors, appointments, bills, loadData, onLogout }) {
   const [localGovernments, setLocalGovernments] = useState([]);
   const [form, setForm] = useState({
     name: '', email: '', password: '', role: 'patient',
@@ -97,6 +99,9 @@ export default function DashboardPage({ user, dashboard, patients, doctors, appo
   const isDoctor = user?.role === 'doctor';
   const isPatient = user?.role === 'patient';
 
+  if (isPatient) return <PatientBookingPage user={user} doctors={doctors} appointments={appointments} loadData={loadData} onLogout={onLogout} />;
+  if (isDoctor) return <DoctorDashboardPage user={user} doctors={doctors} appointments={appointments} loadData={loadData} />;
+
   return (
     <>
       <div className="page-header">
@@ -106,6 +111,22 @@ export default function DashboardPage({ user, dashboard, patients, doctors, appo
         </div>
         <p className="page-header-user">{user?.role === 'admin' ? 'Administrator' : user?.role === 'doctor' ? 'Doctor' : 'Patient'} account</p>
       </div>
+
+      {isPatient && (
+        <section className="patient-welcome" aria-labelledby="patient-welcome-title">
+          <div className="patient-welcome-copy">
+            <span className="welcome-eyebrow">YOUR CARE, MADE SIMPLE</span>
+            <h2 id="patient-welcome-title">Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening'}, {user?.name?.split(' ')[0]}.</h2>
+            <p>Find the right specialist and book your next visit in just a few steps.</p>
+            <button className="primary-btn" onClick={() => document.getElementById('appointment-booking')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}>Book an appointment <span aria-hidden="true">→</span></button>
+          </div>
+          <div className="welcome-mark" aria-hidden="true"><span>+</span><i>✚</i></div>
+          <div className="welcome-appointment">
+            <span className="welcome-appointment-icon">✓</span>
+            <span><strong>{appointments.length ? 'Your care is in good hands' : 'Here when you need us'}</strong><small>{appointments.length ? `${appointments.length} appointment${appointments.length === 1 ? '' : 's'} on your schedule` : 'Trusted doctors, easy appointments'}</small></span>
+          </div>
+        </section>
+      )}
 
       <section className="stats-grid">
         {stats.map((s) => <StatCard key={s.label} {...s} />)}
@@ -273,8 +294,23 @@ export default function DashboardPage({ user, dashboard, patients, doctors, appo
 
       {isPatient && (
         <>
+          <section className="patient-doctors-section">
+            <div className="patient-section-heading">
+              <div><span className="welcome-eyebrow">CITYCARE SPECIALISTS</span><h2>Find a doctor</h2></div>
+              <span className="doctor-total">{doctors.length} available</span>
+            </div>
+            {doctors.length ? <div className="patient-doctor-list">
+              {doctors.slice(0, 4).map((doctor, index) => (
+                <article className="patient-doctor-card" key={doctor.id}>
+                  <div className={`patient-doctor-avatar avatar-${index % 4}`} aria-hidden="true">{doctor.user?.name?.charAt(0) || 'D'}</div>
+                  <div className="patient-doctor-info"><span className="doctor-rating">CITYCARE DOCTOR</span><h3>{doctor.user?.name || 'CityCare Doctor'}</h3><p>{doctor.specialization || 'General Practitioner'}</p><small>{doctor.availability || 'Appointments available'}</small></div>
+                  <button className="secondary-btn patient-book-btn" onClick={() => { setForm((prev) => ({ ...prev, doctorId: doctor.id })); document.getElementById('appointment-booking')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}>Choose doctor</button>
+                </article>
+              ))}
+            </div> : <div className="panel patient-no-doctors">No doctors are available yet. Please check back soon.</div>}
+          </section>
           <section className="content-grid">
-            <div className="panel">
+            <div className="panel" id="appointment-booking">
               <div className="panel-header">
                 <h3>Book an appointment</h3>
               </div>

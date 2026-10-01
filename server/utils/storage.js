@@ -5,13 +5,17 @@ const storagePath = path.join(__dirname, '..', 'data', 'storage.json');
 
 function ensureSeedData(state) {
   if (state.users.length > 0) {
+    const adminUser = state.users.find((user) => user.id === 'user-admin');
+    if (adminUser && (adminUser.name === 'System Admin' || adminUser.name === 'Super Admin')) {
+      adminUser.name = 'Administrator';
+    }
     return state;
   }
 
   const now = new Date().toISOString();
   const adminUser = {
     id: 'user-admin',
-    name: 'System Admin',
+    name: 'Administrator',
     email: 'admin@citycare.com',
     passwordHash: '$2b$10$3jiNDcTmoH2FgdqLaagkYeO6d5jBfPpN2l3lJ6xnU.z6qlo2y3rGa',
     role: 'admin',
@@ -41,6 +45,8 @@ function ensureSeedData(state) {
     userId: doctorUser.id,
     specialization: 'Cardiology',
     phone: '+966500111111',
+    state: 'Lagos',
+    localGovernment: 'Ikeja',
     availability: 'Mon-Fri 09:00-17:00',
     createdAt: now,
   };
