@@ -171,7 +171,7 @@ export async function loginUser(email, password) {
   return { token, user: { id: user.id, name: user.name, email: user.email, role: user.role } };
 }
 
-export async function registerUser({ name, email, password, role = 'patient' }) {
+export async function registerUser() {
   throw new Error('Registration is disabled. Only admins can add doctors.');
 }
 

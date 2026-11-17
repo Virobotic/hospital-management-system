@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import { getMe, getDashboard, getPatients, getDoctors, getAppointments, getRecords, getBills, TOKEN_KEY } from './api';
 import Sidebar from './components/Sidebar';
@@ -24,7 +24,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const meData = await getMe();
       const currentUser = meData.user;
@@ -49,14 +49,18 @@ function App() {
     } catch (err) {
       setError(err.message);
     }
-  };
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (token) {
-      loadData();
-    }
-  }, []);
+    if (!token) return;
+
+    const timer = window.setTimeout(() => {
+      void loadData();
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [loadData]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 768px)');

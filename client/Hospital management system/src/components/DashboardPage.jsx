@@ -4,7 +4,7 @@ import { NIGERIAN_STATES, getLocalGovernments } from '../data/nigeriaLocations';
 import PatientBookingPage from './PatientBookingPage';
 import DoctorDashboardPage from './DoctorDashboardPage';
 
-function StatCard({ label, value, trend, icon }) {
+function StatCard({ label, value, trend }) {
   return (
     <article className="stat-card">
       <p className="stat-label">{label}</p>
